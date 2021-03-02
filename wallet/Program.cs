@@ -5,6 +5,8 @@ namespace Wallet
 {
     enum Banknote
     {
+        One = 1,
+        Two = 2,
         Five = 5,
         Ten = 10,
         Twenty = 20,
@@ -16,8 +18,14 @@ namespace Wallet
 
     class Banknotes
     {
-        private Banknote banknote;
+
         private double amount;
+        private Banknote banknote;
+        protected int Banknote
+        {
+            get { return (int)banknote; }
+            set { banknote = (Banknote)value; }
+        }
 
         public Banknotes(Banknote banknote, double amount)  // конструктор
         {
@@ -37,9 +45,25 @@ namespace Wallet
 
         public double GetTotal()
         {
-            return (int)this.banknote * this.amount;
+            return this.Banknote * this.amount;
         }
     }
+
+    class Exchanger : Banknotes
+    {
+        private double currency;
+
+        public Exchanger(double currency, Banknote banknote, double amount) : base(banknote, amount)
+        {
+            this.currency = currency;
+        }
+        public double Convert()
+        {
+            return base.GetTotal() * this.currency;
+        }
+        
+    }
+
     class Program
     {
         static void Main(string[] args)
@@ -50,6 +74,9 @@ namespace Wallet
 
             Banknotes tmp = new Banknotes(randomBanknote, random.Next(1,1000));
             Console.WriteLine(tmp);
+            Exchanger exchanger = new Exchanger(33.76, Banknote.One, 1);
+            Console.WriteLine(exchanger.Convert());
+            
         }
     }
 }
